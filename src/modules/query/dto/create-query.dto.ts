@@ -5,33 +5,10 @@ export class CreateQueryDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  full_name: string;
+  image1: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  mac_address: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  liveness: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  one_n: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  one_one: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  attack: string;
-
-  @ApiProperty()
-  create_date: Date;
+  image2: string;
 }

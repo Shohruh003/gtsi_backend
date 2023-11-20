@@ -6,4 +6,12 @@ export class CreateEventsDto {
   @IsNotEmpty()
   @IsString()
   mac_address: string;
+
+  @ApiProperty()
+  // @IsNotEmpty()
+  // @IsString()
+  video: string;
+
+  // @ApiProperty()
+  created_date: Date;
 }

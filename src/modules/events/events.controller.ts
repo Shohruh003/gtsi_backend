@@ -3,7 +3,6 @@ import { EventsService } from './events.service';
 import { CreateEventsDto } from './dto/create-events.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { multerOptions } from 'src/helpers/multer';
 
 @Controller('events')
 @ApiTags('events')
@@ -17,10 +16,10 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
-  @Get(':id')
+  @Get(':user_id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(+id);
+  findOne(@Param('user_id') user_id: string) {
+    return this.eventsService.findOne(+user_id);
   }
   @Post()
   @UseInterceptors(FileInterceptor('video'))

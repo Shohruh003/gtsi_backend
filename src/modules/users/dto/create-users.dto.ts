@@ -2,6 +2,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUsersDto {
+
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -9,18 +10,17 @@ export class CreateUsersDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  passport: string;
+  gender: boolean;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  pinfl: string;
+  birth_date: string;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  date_of_birth: string;
+  nationality: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -30,5 +30,63 @@ export class CreateUsersDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  pass_issue_date: string;
+  cityzenship_country_name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  cityzenship_country_code: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  pinfl: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  birth_country_name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  birth_country_code: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  passport_issue: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  passport_expiration: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  internal_affairs_name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  internal_affairs_code: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  physical_condition: boolean;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  nationality_code: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  passport_series: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  passport_number: number;
+
+  created_date: Date;
+
 }

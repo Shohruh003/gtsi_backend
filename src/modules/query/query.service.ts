@@ -2,47 +2,79 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Query } from './query.entity';
 import { Repository } from 'typeorm';
-import { CreateQueryDto } from './dto/create-query.dto';
-import { UpdateQueryDto } from './dto/update-query.dto';
-
+import axios from 'axios';
+import * as blobUtil from 'blob-util';
 
 @Injectable()
 export class QueryService {
-    constructor(
-        @InjectRepository(Query)
-        private readonly queryRepo: Repository<Query>,
-      ) {}
-    
-      findAll() {
-        return this.queryRepo.find();
-      }
-    
-      async findOne(id: number) {
-        return await this.queryRepo.findOneBy({ id });
-      }
-    
-      async create(data: CreateQueryDto, image1: Express.Multer.File[], image2: Express.Multer.File[]) {
-        const query = this.queryRepo.create();
-        query.full_name = data.full_name;
-        query.mac_address = data.mac_address;
-        query.liveness = data.liveness;
-        query.attack = data.attack;
-        query.one_n = data.one_n;
-        query.one_one = data.one_one;
-        query.image1 = image1[0].filename;
-        query.image2 = image2[0].filename;
-        query.create_date = data.create_date;
-    
-        await this.queryRepo.save(query);
-        return query;
-      }
-    
-      async update(id: number, body: UpdateQueryDto) {
-        await this.queryRepo.update({ id }, body);
-        return await this.queryRepo.findOneBy({ id });
-      }
-    
-      async delete(id: number) {
-        return await this.queryRepo.delete({ id });
-      }
+  constructor(
+    @InjectRepository(Query)
+    private readonly queryRepo: Repository<Query>,
+  ) {}
+
+  async create(image1: Express.Multer.File[], image2: Express.Multer.File[]) {
+    let image1Id = null;
+    let image2Id = null;
+    const form = new FormData();
+    form.append('attributes', '{"face": {}}');
+
+    const image1Blob = blobUtil.createBlob([image1[0].buffer], { type: image1[0].mimetype });
+    form.append('photo', image1Blob, image1[0].originalname);
+
+    try {
+      const response = await axios.post(
+        'https://faceids.tadi.uz/detect',
+        form,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Token 61b1d3c13cfb8ff23fc72d15f5b6e38f54530740d8e476066ff86b545246cd5a'
+          }
+        });
+
+      image1Id = response.data.objects.face[0].id;
+    } catch (error) {
+      console.log(error);
+    }
+
+    const form2 = new FormData();
+    form2.append('attributes', '{"face": {}}');
+
+    const image2Blob = blobUtil.createBlob([image2[0].buffer], { type: image2[0].mimetype });
+    form2.append('photo', image2Blob, image2[0].originalname);
+
+    try {
+      const response = await axios.post(
+        'https://faceids.tadi.uz/detect',
+        form2,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Token 61b1d3c13cfb8ff23fc72d15f5b6e38f54530740d8e476066ff86b545246cd5a'
+          }
+        });
+
+        image2Id = response.data.objects.face[0].id;
+    } catch (error) {
+      console.log(error);
+    }
+
+
+    const response = await axios.get('https://faceids.tadi.uz/verify', {
+  params: {
+    'object1': `detection:${image1Id}`,
+    'object2': `detection:${image2Id}`
+  },
+  headers: {
+    'Accept': 'application/json',
+    'Authorization': 'Token 61b1d3c13cfb8ff23fc72d15f5b6e38f54530740d8e476066ff86b545246cd5a'
+  }
+})
+
+    const query = this.queryRepo.create();
+    query.confidence = response.data.confidence
+
+    await this.queryRepo.save(query);
+    return query;
+  }
 }

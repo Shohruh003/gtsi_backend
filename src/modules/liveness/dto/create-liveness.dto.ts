@@ -1,9 +1,9 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateQueryDto {
+export class CreateQueryDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  full_name: string;
+  video: string;
 }
