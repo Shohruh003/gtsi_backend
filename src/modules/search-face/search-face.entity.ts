@@ -1,13 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'liveness' })
-export class Liveness extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity({ name: 'search_face' }) 
+export class SearchFace extends BaseEntity {
 
   @Column({
     nullable: true,
   })
-  liveness: boolean;
+  id: string[];
 }

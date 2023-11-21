@@ -74,7 +74,7 @@ export class QueryService {
     const query = this.queryRepo.create();
     query.confidence = response.data.confidence
 
-    await this.queryRepo.save(query);
+    // await this.queryRepo.save(query);
     return query;
   }
 }

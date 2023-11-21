@@ -10,6 +10,8 @@ import { EventsModule } from './modules/events/events.module';
 import { Event } from './modules/events/events.entity';
 import { LivenessModule } from './modules/liveness/liveness.module';
 import { Liveness } from './modules/liveness/liveness.entity';
+import { SearchFaceModule } from './modules/search-face/search-face.module';
+import { SearchFace } from './modules/search-face/search-face.entity';
 
 @Module({
   imports: [
@@ -21,12 +23,13 @@ import { Liveness } from './modules/liveness/liveness.entity';
       password: process.env.DB_PASSWORD,
       port: 5432,
       username: process.env.DB_USER,
-      entities: [Query, Users, Event, Liveness],
+      entities: [Query, Users, Event, Liveness, SearchFace],
       synchronize: true,
     }),
     QueryModule,
     UsersModule,
     EventsModule,
-    LivenessModule]
+    LivenessModule,
+    SearchFaceModule]
 })
 export class AppModule {}

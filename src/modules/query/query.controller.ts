@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post, HttpCode, HttpStatus, UseInterceptors, UploadedFiles, Bind} from '@nestjs/common';
 import { QueryService } from './query.service';
-import { ApiTags, ApiResponse} from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiConsumes, ApiBody} from '@nestjs/swagger';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @Controller('query')
@@ -10,6 +10,22 @@ export class QueryController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image1: {
+          type: 'string',
+          format: 'binary',
+        },
+        image2: {
+          type: 'string',
+          format: 'binary',
+        }
+      },
+    },
+  })
   @Bind(UploadedFiles())
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'image1', maxCount: 1 },

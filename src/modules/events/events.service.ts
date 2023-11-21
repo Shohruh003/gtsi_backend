@@ -15,8 +15,19 @@ export class EventsService {
     private readonly eventsRepo: Repository<Event>,
   ) {}
 
-  findAll() {
-    return this.eventsRepo.find();
+  async findAll(fullName?: string, macAddress?: string) {
+    let events = this.eventsRepo.createQueryBuilder('event');
+    
+    if (fullName) {
+      events = events.andWhere('event.full_name LIKE :fullName', { fullName: `%${fullName}%` });
+    }
+    
+    if (macAddress) {
+      events = events.andWhere('event.mac_address LIKE :macAddress', { macAddress: `%${macAddress}%` });
+    }
+    
+    return  await events.getMany();
+    
   }
 
   async findOne(user_id: number) {
@@ -129,7 +140,6 @@ export class EventsService {
           attack: true
         });
       }else {
-         
         event = this.eventsRepo.create({
           mac_address: data?.mac_address,
           full_name: 'Неизвестно',

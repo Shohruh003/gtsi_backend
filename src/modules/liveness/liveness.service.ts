@@ -22,8 +22,6 @@ export class LivenessService {
     
         const liveness = this.livenessRepo.create();
         liveness.liveness = response.data.success
-    
-        await this.livenessRepo.save(liveness);
         return liveness;
       }
 }

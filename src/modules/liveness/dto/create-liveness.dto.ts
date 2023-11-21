@@ -1,9 +1,13 @@
-import { IsString, IsNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiBody } from '@nestjs/swagger';
+import { Express } from 'express';
 
-export class CreateQueryDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  video: string;
+export class CreateLivenessDto {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Videofayl',
+    required: true,
+    name: 'video',
+  })
+  video: Express.Multer.File;
 }

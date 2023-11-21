@@ -1,14 +1,18 @@
-import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateQueryDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+
+  @ApiProperty({
+    format: 'binary',
+    required: false,
+    description: 'Image1',
+  })
   image1: string;
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @ApiProperty({
+    format: 'binary',
+    required: false,
+    description: 'Image2',
+  })
   image2: string;
 }

@@ -1,17 +1,18 @@
-import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEventsDto {
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  @ApiProperty({
+    required: false,
+    description: 'Foydalanuvchining MAC manzili',
+  })
   mac_address: string;
 
-  @ApiProperty()
-  // @IsNotEmpty()
-  // @IsString()
+  @ApiProperty({
+    format: 'binary',
+    required: false,
+    description: 'Videofayl',
+  })
   video: string;
 
-  // @ApiProperty()
   created_date: Date;
 }

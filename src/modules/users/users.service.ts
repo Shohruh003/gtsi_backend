@@ -12,8 +12,30 @@ export class UsersService {
         private readonly usersRepo: Repository<Users>,
       ) {}
     
-      findAll() {
-        return this.usersRepo.find();
+      async findByFilters(fullName?: string, gender?: boolean, passportSeries?: string, passportNumber?: number, pinfl?: string) {
+        const query = this.usersRepo.createQueryBuilder('user');
+      
+        if (fullName) {
+          query.andWhere('user.full_name LIKE :fullName', { fullName: `%${fullName}%` });
+        }
+      
+        if (gender !== undefined) {
+          query.andWhere('user.gender = :gender', { gender });
+        }
+      
+        if (passportSeries) {
+          query.andWhere('user.passport_series LIKE :passportSeries', { passportSeries: `%${passportSeries}%` });
+        }
+      
+        if (passportNumber) {
+          query.andWhere('user.passport_number LIKE :passportNumber', { passportNumber: `%${passportNumber}%` });
+        }
+      
+        if (pinfl) {
+          query.andWhere('user.pinfl LIKE :pinfl', { pinfl: `%${pinfl}%` });
+        }
+      
+        return await query.getMany();
       }
     
       async findOne(user_id: number) {
