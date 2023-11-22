@@ -5,6 +5,7 @@ import { CreateEventsDto } from './dto/create-events.dto';
 import { Event } from './events.entity';
 import axios from 'axios';
 import * as fs from 'fs';
+import { FilterEventsDto } from './dto/filter-events.dto';
 
 @Injectable()
 export class EventsService {
@@ -15,19 +16,49 @@ export class EventsService {
     private readonly eventsRepo: Repository<Event>,
   ) {}
 
-  async findAll(fullName?: string, macAddress?: string) {
+  findAll() {
+    return this.eventsRepo.find();
+  }
+
+  async findByFilters(filters: FilterEventsDto) {
     let events = this.eventsRepo.createQueryBuilder('event');
     
-    if (fullName) {
-      events = events.andWhere('event.full_name LIKE :fullName', { fullName: `%${fullName}%` });
+    if (filters.full_name) {
+      events = events.andWhere('event.full_name LIKE :fullName', { fullName: `%${filters.full_name}%` });
     }
     
-    if (macAddress) {
-      events = events.andWhere('event.mac_address LIKE :macAddress', { macAddress: `%${macAddress}%` });
+    if (filters.gender) {
+      events = events.andWhere('event.gender = :gender', { gender: filters.gender });
     }
     
-    return  await events.getMany();
+    if (filters.mac_address) {
+      events = events.andWhere('event.mac_address LIKE :macAddress', { macAddress: `%${filters.mac_address}%` });
+    }
     
+    if (filters.created_date) {
+      const startDate = new Date(filters.created_date);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(filters.created_date);
+      endDate.setHours(23, 59, 59, 999);
+      events = events.andWhere('event.created_date BETWEEN :startDate AND :endDate', { startDate, endDate });
+    }
+    
+    if (filters.year) {
+      const startDate = new Date(`${filters.year}-01-01T00:00:00Z`);
+      const endDate = new Date(`${filters.year}-12-31T23:59:59Z`);
+      events.andWhere('event.created_date >= :startDate', { startDate })
+            .andWhere('event.created_date <= :endDate', { endDate });
+    }
+    
+    if (filters.month) {
+      events.andWhere('EXTRACT(MONTH FROM event.created_date) = :month', { month: filters.month });
+    }
+    
+    if (filters.day) {
+      events.andWhere('EXTRACT(DAY FROM event.created_date) = :day', { day: filters.day });
+    }
+    
+    return await events.getMany();
   }
 
   async findOne(user_id: number) {
@@ -159,5 +190,10 @@ export class EventsService {
 
   
     return this.eventsRepo.save(event);
+  }
+
+
+  async delete(id: number) {
+    await this.eventsRepo.delete({ id });
   }
 }

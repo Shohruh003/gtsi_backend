@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, HttpCode, HttpStatus, Body, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
+import { Controller, Get, Param, Post, HttpCode, HttpStatus, Body, UseInterceptors, UploadedFile, Query, Delete } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventsDto } from './dto/create-events.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -13,10 +13,7 @@ export class EventsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAll(@Query() filters: FilterEventsDto) {
-    const results = await this.eventsService.findAll(
-      filters.full_name,
-      filters.mac_address
-    );
+    const results = await this.eventsService.findByFilters(filters);
     const count = results.length;
     return { count, results };
   }
@@ -37,5 +34,11 @@ export class EventsController {
     @Body() createEventsDto: CreateEventsDto,
   ) {
     return this.eventsService.create(createEventsDto, video);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(@Param('id') id: number) {
+    await this.eventsService.delete(id);
   }
 }

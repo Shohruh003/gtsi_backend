@@ -20,20 +20,29 @@ export class FilterEventsDto {
 
   @ApiProperty({
     required: false,
-    description: 'Filter year',
+    description: 'Created date of the event',
+    type: Date,
   })
-  year?: string;
+  created_date?: Date;
 
   @ApiProperty({
     required: false,
-    description: 'Filter month',
+    description: 'Year of the event',
+    type: Number,
   })
-  month?: string;
-
+  year?: number;
 
   @ApiProperty({
     required: false,
-    description: 'Filter day',
+    description: 'Month of the event',
+    type: Number,
   })
-  day?: string;
+  month?: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Day of the event',
+    type: Number,
+  })
+  day?: number;
 }

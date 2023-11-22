@@ -35,17 +35,15 @@ export class SearchFaceService {
           );
         
           response.data.objects.face.forEach((e) => {
-            imageId = e.id
-            // imageIds.push(e.id);
+            imageIds.push(e.id);
           });
         } catch (error) {
           console.log(error);
           throw new Error('Failed to detect face.');
         }
-        console.log(imageId);
         
         const searchFace = new SearchFace();
-        searchFace.id = imageId;
+        searchFace.user_id = imageIds;
         return searchFace;
       }
 }
